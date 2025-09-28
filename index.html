@@ -1,0 +1,404 @@
+<style>
+  /* Pastel one-page theme (no JS) */
+  :root{
+    --bg1:#f7fbff; --bg2:#f2fdf7;
+    --card:#ffffff; --ink:#1f2937; --sub:#6b7280;
+    --brand:#86efac; --brand-ink:#14532d; --accent:#bfdbfe;
+    --border:#e5e7eb; --muted:#9ca3af; --warn:#b45309;
+    --radius:14px; --shadow:0 10px 24px rgba(2,6,23,.05);
+    --link:#166534; --link-h:#065f46;
+  }
+  .site{color:var(--ink); background:linear-gradient(180deg,var(--bg1),var(--bg2)); font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif; line-height:1.65}
+  a{color:var(--link); text-decoration:none}
+  a:hover{text-decoration:underline; color:var(--link-h)}
+  img{max-width:100%; height:auto}
+  .container{width:min(1100px,92vw); margin:0 auto}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+  .pill{border-radius:999px}
+  .sub{color:var(--sub)}
+  .note{color:var(--muted); font-size:.92rem}
+  .btn{display:inline-block; padding:10px 16px; border-radius:999px; font-weight:700; box-shadow:var(--shadow)}
+  .btn-primary{background:var(--brand-ink); color:#fff}
+  .btn-outline{background:#fff; color:var(--brand-ink); border:2px solid var(--brand-ink)}
+  .section{padding:34px 0}
+  .title{font-size:clamp(26px,4vw,40px); line-height:1.25; margin:0 0 10px}
+  .h2{font-size:1.4rem; margin:0 0 16px}
+  .grid-2{display:grid; gap:16px; grid-template-columns:repeat(2,1fr)}
+  .grid-3{display:grid; gap:16px; grid-template-columns:repeat(3,1fr)}
+  .stack{display:grid; gap:10px}
+
+  /* Header (ページ内ヘッダー。テーマヘッダー重複時は削除可) */
+  .header{position:sticky; top:0; z-index:10; background:rgba(255,255,255,.9); backdrop-filter:saturate(150%) blur(8px); border-bottom:1px solid var(--border)}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
+  .logo{display:flex; align-items:center; gap:10px; font-weight:800}
+  .logo-badge{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--brand); box-shadow:var(--shadow)}
+  .menu{display:flex; gap:18px; list-style:none; margin:0; padding:0}
+  .menu a{color:var(--ink); font-weight:600}
+
+  /* Hero */
+  .hero{padding:48px 0 24px}
+  .hero-grid{display:grid; gap:24px; grid-template-columns:1.2fr .8fr; align-items:center}
+  .badges{display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 20px}
+  .badge{background:#ffffffb3; border:1px solid var(--border); padding:6px 12px; border-radius:999px; color:var(--sub); font-weight:700; font-size:.92rem}
+
+  /* Steps */
+  .step{padding:16px}
+  .num{width:34px; height:34px; border-radius:50%; background:var(--accent); color:#1e3a8a; display:grid; place-items:center; font-weight:800; margin-bottom:8px}
+
+  /* Services / Price / Profile */
+  .service{padding:16px; display:grid; gap:8px}
+  .price{padding:20px; display:grid; gap:10px}
+  .price-tag{font-size:2rem; font-weight:900; color:var(--brand-ink)}
+  .profile{padding:16px; display:grid; grid-template-columns:64px 1fr; gap:12px; align-items:start}
+
+  /* Form (mailto) - CSSで条件表示、JS不要 */
+  form{display:grid; gap:12px}
+  .field{display:grid; gap:6px}
+  label{font-weight:700}
+  input,select,textarea{border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:1rem; background:#fff}
+  textarea{min-height:120px; resize:vertical}
+  input:focus,select:focus,textarea:focus,button:focus{outline:3px solid #fde68a; outline-offset:1px}
+  .seg{display:inline-grid; grid-auto-flow:column; gap:8px; align-items:center}
+  .seg label{padding:6px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; font-weight:700; color:var(--ink); background:#fff}
+  /* ラジオは非表示 */
+  #m-online,#m-inperson{position:absolute; left:-9999px}
+  /* 選択状態の見た目 */
+  #m-online:checked + label[for="m-online"], #m-inperson:checked + label[for="m-inperson"]{background:var(--brand); color:var(--brand-ink); border-color:var(--brand)}
+  /* 条件表示（パネルはフォーム内でラジオより後方に配置） */
+  .panel{display:none; border:1px dashed var(--border); padding:12px; border-radius:10px; background:#fff}
+  #m-online:checked ~ .panel.online{display:block}
+  #m-inperson:checked ~ .panel.inperson{display:block}
+
+  /* Footer */
+  .footer{border-top:1px solid var(--border); padding:20px 0; color:var(--sub); font-size:.95rem}
+
+  /* RWD */
+  @media (max-width:900px){
+    .hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}
+    .menu{display:none}
+  }
+</style>
+
+<div class="site">
+  <!-- Header（テーマと重なる場合は、このブロックを削除可） -->
+  <header class="header">
+    <div class="container nav">
+      <div class="logo">
+        <div class="logo-badge" aria-hidden="true">
+          <!-- 木のロゴ（SVG） -->
+          <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="24" r="18" fill="#a7f3d0"></circle>
+            <rect x="29" y="24" width="6" height="24" rx="3" fill="#8b5e3c"></rect>
+            <circle cx="22" cy="22" r="10" fill="#bbf7d0"></circle>
+            <circle cx="42" cy="22" r="10" fill="#bbf7d0"></circle>
+          </svg>
+        </div>
+        <div>
+          <div style="font-weight:800;">こころと生活の相談室</div>
+          <div class="sub" style="font-size:.95rem;">社会福祉士による悩み相談（オンライン・対面｜埼玉・越谷）</div>
+        </div>
+      </div>
+      <nav aria-label="主要ナビゲーション">
+        <ul class="menu">
+          <li><a href="#services">サービス</a></li>
+          <li><a href="#price">料金</a></li>
+          <li><a href="#booking">予約</a></li>
+          <li><a href="#faq">よくある質問</a></li>
+          <li><a href="#access">アクセス</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <h1 id="hero-title" class="title">社会福祉士に、日々の悩みを気軽に相談しませんか？</h1>
+          <p class="sub">仕事・家族・介護・お金・人間関係など、くらしの困りごとを国家資格の社会福祉士が丁寧にサポート。オンライン（全国）と対面（埼玉・越谷）に対応しています。</p>
+          <div class="badges" aria-label="特徴">
+            <span class="badge">💳 1回 8,000円（60分）</span>
+            <span class="badge">🧑‍⚕️ 社会福祉士が担当（1名）</span>
+            <span class="badge">🖥️ オンライン / 🏠 対面（越谷）</span>
+            <span class="badge">🔒 プライバシー配慮</span>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#booking">オンライン相談を予約</a>
+            <a class="btn btn-outline" href="#booking">対面（越谷）を予約</a>
+            <!-- すぐにメール予約したい方向けのショートカット（宛先を変更してください） -->
+            <a class="btn btn-outline" href="mailto:info@example.com?subject=%E3%80%90%E4%BA%88%E7%B4%84%E5%B0%8F%E6%9C%AA%E3%80%91%E7%A4%BE%E4%BC%9A%E7%A6%8F%E7%A5%89%E5%A3%AB%E7%9B%B8%E8%AB%87%20%288000%E5%86%86%2F60%E5%88%86%29&body=%E3%81%8A%E5%90%8D%E5%89%8D%EF%BC%9A%0A%E9%9B%BB%E8%A9%B1%EF%BC%9A%0A%E5%B8%8C%E6%9C%9B%E6%96%B9%E6%B3%95%EF%BC%9A%E3%82%AA%E3%83%B3%E3%83%A9%E3%82%A4%E3%83%B3%2F%E5%AF%BE%E9%9D%A2%EF%BC%88%E8%B6%8A%E8%B0%B7%EF%BC%89%0A%E6%97%A5%E6%99%82%E5%80%99%E8%A3%9C%EF%BC%9A%0A%E7%9B%B8%E8%AB%87%E6%A6%82%E8%A6%81%EF%BC%9A%0A" title="メールで予約">メールで予約</a>
+          </div>
+          <p class="note" style="margin-top:10px;">緊急の危険がある場合は相談ではなく、119/110にご連絡ください。</p>
+        </div>
+        <div class="card" style="padding:16px;">
+          <h2 class="h2">初めての方へ</h2>
+          <div class="stack">
+            <div class="sub">ご希望やペースに合わせて、必要な支援やつながり先も一緒に考えます。</div>
+            <ul class="sub" style="margin:8px 0 0 18px;">
+              <li>押しつけのない丁寧なヒアリング</li>
+              <li>一人で抱えこまないための場所</li>
+              <li>解決の見通しづくりをお手伝い</li>
+            </ul>
+            <div class="note">医療行為・緊急対応は行っていません。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flow -->
+    <section class="section" aria-labelledby="how-title">
+      <div class="container">
+        <h2 id="how-title" class="h2">ご利用の流れ</h2>
+        <div class="grid-3">
+          <div class="card step">
+            <div class="num" aria-hidden="true">1</div>
+            <h3 style="margin:0 0 6px;">予約フォームの送信</h3>
+            <p class="sub">オンライン/対面の希望や相談概要、日時候補をご記入ください。</p>
+          </div>
+          <div class="card step">
+            <div class="num" aria-hidden="true">2</div>
+            <h3 style="margin:0 0 6px;">日程・方法の確定</h3>
+            <p class="sub">メールで日程と方法（Zoom/Google Meet/対面・越谷）を確定します。</p>
+          </div>
+          <div class="card step">
+            <div class="num" aria-hidden="true">3</div>
+            <h3 style="margin:0 0 6px;">当日ご相談（60分）</h3>
+            <p class="sub">落ち着ける環境でお話を伺い、今後のステップを一緒に整理します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section" aria-labelledby="services-title">
+      <div class="container">
+        <h2 id="services-title" class="h2">サービス内容</h2>
+        <div class="grid-2">
+          <div class="card service">
+            <h3>オンライン相談（Zoom / Google Meet）</h3>
+            <p class="sub">全国どこからでも。映像なし（音声のみ）もOKです。</p>
+            <ul class="sub" style="margin:0 0 0 18px;">
+              <li>1回 60分 / 8,000円</li>
+              <li>録画なし・個人情報の取り扱いに配慮</li>
+              <li>夜間・土日枠あり（空き状況により変動）</li>
+            </ul>
+          </div>
+          <div class="card service">
+            <h3>対面相談（埼玉・越谷）</h3>
+            <p class="sub">越谷のプライベート空間でお話できます。バリアフリー配慮も可能です。</p>
+            <ul class="sub" style="margin:0 0 0 18px;">
+              <li>1回 60分 / 8,000円</li>
+              <li>アクセスしやすい会場をご案内</li>
+              <li>お連れさま同席もご相談ください</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Price -->
+    <section id="price" class="section" aria-labelledby="price-title">
+      <div class="container">
+        <h2 id="price-title" class="h2">料金</h2>
+        <div class="grid-3">
+          <div class="card price">
+            <div class="price-tag">¥8,000 <span class="sub" style="font-size:1rem;">/ 回（60分）</span></div>
+            <div class="sub">オンライン・対面いずれも同料金です。</div>
+            <div class="note">お支払い方法：銀行振込 / クレジットカード（事前決済）</div>
+          </div>
+          <div class="card price">
+            <h3 style="margin:0;">キャンセルポリシー</h3>
+            <ul class="sub" style="margin:6px 0 0 18px;">
+              <li>前日まで：無料</li>
+              <li>当日：料金の50%</li>
+              <li>無連絡：料金の100%</li>
+            </ul>
+          </div>
+          <div class="card price">
+            <h3 style="margin:0;">プライバシー</h3>
+            <ul class="sub" style="margin:6px 0 0 18px;">
+              <li>守秘義務に基づき丁寧に取り扱います</li>
+              <li>情報は目的以外に使用しません</li>
+              <li>緊急時は安全確保を最優先します</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile（1名） -->
+    <section class="section" aria-labelledby="profiles-title">
+      <div class="container">
+        <h2 id="profiles-title" class="h2">担当社会福祉士</h2>
+        <div class="card profile">
+          <div aria-hidden="true" style="width:64px;height:64px;border-radius:50%;background:#e2e8f0;display:grid;place-items:center;font-weight:800;">S</div>
+          <div>
+            <h3 style="margin:0;">佐藤 ゆい</h3>
+            <div class="note">社会福祉士（担当は1名です）</div>
+            <p class="sub" style="margin:6px 0 0;">生活の困りごと、家族・介護、就労、制度活用のご相談に幅広く対応。安心して話せる雰囲気づくりを大切にしています。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking (mailtoフォーム。宛先を変更してください) -->
+    <section id="booking" class="section" aria-labelledby="booking-title">
+      <div class="container">
+        <h2 id="booking-title" class="h2">予約フォーム</h2>
+        <div class="card" style="padding:16px;">
+          <!-- 送信時にメールアプリが起動します。宛先を変更してください。 -->
+          <form action="mailto:info@example.com" method="post" enctype="text/plain">
+            <div class="grid-2">
+              <div class="field">
+                <label for="name">お名前</label>
+                <input id="name" name="お名前" type="text" placeholder="山田 太郎" required>
+              </div>
+              <div class="field">
+                <label for="email">メールアドレス</label>
+                <input id="email" name="メール" type="email" placeholder="taro@example.com" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <span>希望の相談方法</span>
+              <div class="seg">
+                <input type="radio" id="m-online" name="相談方法" value="オンライン" checked>
+                <label for="m-online">オンライン</label>
+                <input type="radio" id="m-inperson" name="相談方法" value="対面（越谷）">
+                <label for="m-inperson">対面（越谷）</label>
+              </div>
+            </div>
+
+            <!-- パネルはラジオの後方に配置（CSSで表示切替） -->
+            <div class="panel online">
+              <div class="field">
+                <label for="tool">オンラインの希望ツール</label>
+                <select id="tool" name="オンラインツール">
+                  <option value="">特に指定なし</option>
+                  <option>Zoom</option>
+                  <option>Google Meet</option>
+                </select>
+              </div>
+              <div class="note">通信環境の良い場所・イヤホンのご使用をおすすめします。</div>
+            </div>
+
+            <div class="panel inperson">
+              <div class="field">
+                <label for="office">来室先</label>
+                <input id="office" name="来室先" value="越谷オフィス（埼玉）" readonly>
+              </div>
+              <div class="note">バリアフリーや個室のご希望があれば備考にご記入ください。</div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="date1">日時候補1</label>
+                <input id="date1" name="日時候補1" type="datetime-local" required>
+              </div>
+              <div class="field">
+                <label for="date2">日時候補2（任意）</label>
+                <input id="date2" name="日時候補2" type="datetime-local">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="topic">相談したいこと（概要）</label>
+              <textarea id="topic" name="相談概要" placeholder="例）仕事のストレスと睡眠の悩みについて..."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="notes">配慮事項・伝えておきたいこと（任意）</label>
+              <textarea id="notes" name="配慮事項" placeholder="例）同席者あり／メール連絡希望 など"></textarea>
+            </div>
+
+            <div class="card" style="padding:12px;">
+              <div><strong>お支払い金額</strong>：8,000円 / 回（60分）</div>
+              <div class="note">決済方法はご予約確定メールにてご案内します。</div>
+            </div>
+
+            <div class="field">
+              <input id="agree" name="同意" type="checkbox" required>
+              <label for="agree">プライバシーポリシー・キャンセルポリシーに同意します</label>
+              <div class="note">医療行為は行いません。緊急時は110/119に連絡してください。</div>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary">この内容で申し込む（メール作成）</button>
+              <button type="reset" class="btn btn-outline">入力をクリア</button>
+            </div>
+          </form>
+          <p class="note" style="margin-top:10px;">送信時にお使いのメールアプリが起動します。うまくいかない場合は <a href="mailto:info@example.com">info@example.com</a> へ直接メールください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title" class="h2">よくある質問</h2>
+        <div class="grid-2">
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">相談時間は延長できますか？</h3>
+            <p class="sub">原則60分ですが、当日の空き状況により30分単位で延長可能です（別料金）。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">どんな内容を相談できますか？</h3>
+            <p class="sub">仕事や家族、介護、福祉制度、金銭管理、人間関係、生活リズムなど、日常の困りごと全般に対応します。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">守秘義務は守られますか？</h3>
+            <p class="sub">社会福祉士の守秘義務に基づき、相談内容は厳重に取り扱います（生命の危険がある場合などを除く）。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">未成年でも利用できますか？</h3>
+            <p class="sub">可能です。内容により保護者の同意や同席をお願いする場合があります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Access（越谷のみ） -->
+    <section id="access" class="section" aria-labelledby="access-title">
+      <div class="container">
+        <h2 id="access-title" class="h2">アクセス（対面・越谷）</h2>
+        <div class="card" style="padding:16px;">
+          <h3 style="margin:0 0 6px;">越谷オフィス（埼玉県）</h3>
+          <p class="sub">〒000-0000 埼玉県越谷市〇〇 0-0-0</p>
+          <p class="note">最寄り駅：越谷 / 南越谷 / 越谷レイクタウン（詳細はご予約確定時にご案内）</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms / Privacy（簡易版：フッターリンク先） -->
+    <section id="terms" class="section" aria-labelledby="terms-title">
+      <div class="container">
+        <h2 id="terms-title" class="h2">利用規約（要約）</h2>
+        <div class="card" style="padding:16px;">
+          <p class="sub">本サービスは一般的な相談支援です。医療的判断や緊急対応は行いません。予約の確定は当方からのメールをもって完了します。キャンセルポリシーは料金欄をご参照ください。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="section" aria-labelledby="privacy-title">
+      <div class="container">
+        <h2 id="privacy-title" class="h2">プライバシーポリシー（要約）</h2>
+        <div class="card" style="padding:16px;">
+          <p class="sub">お預かりする個人情報は、予約および相談対応の目的に限り利用します。法令に基づく場合を除き、ご本人の同意なく第三者に提供しません。安全管理に努めます。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container" style="display:grid; gap:6px;">
+      <div>© こころと生活の相談室</div>
+      <div class="sub">
+        <a href="#terms">利用規約</a> ・
+        <a href="#privacy">プライバシーポリシー</a> ・
+        <a href="#booking">お問い合わせ</a>
+      </div>
+      <div class="note">本サイトは一般的な相談支援サービスです。緊急時は119/110をご利用ください。</div>
+    </div>
+  </footer>
+</div>
