@@ -415,3 +415,36 @@
     </div>
   </footer>
 </div>
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzXwrHBs8vm_EuhWfkCqiRou1Alu-API2MzjvIx_GQIVTd-aZ0__Zt8_ryp8rIouCB1/exec';
+  const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
+
+  (function hookBookingForm(){
+    const form = document.querySelector('#booking form');
+    if(!form) return;
+    form.addEventListener('submit', function(){
+      try{
+        const data = {
+          token: TOKEN,
+          name:  document.getElementById('name')?.value || '',
+          email: document.getElementById('email')?.value || '',
+          method: (document.getElementById('m-inperson')?.checked ? '対面（越谷）' : 'オンライン'),
+          online_tool: document.getElementById('tool')?.value || '',
+          office: document.getElementById('office')?.value || '',
+          datetime1: document.getElementById('date1')?.value || '',
+          datetime2: document.getElementById('date2')?.value || '',
+          summary: document.getElementById('topic')?.value || '',
+          notes: document.getElementById('notes')?.value || '',
+          agree: document.getElementById('agree')?.checked || false,
+          userAgent: navigator.userAgent
+        };
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        if(navigator.sendBeacon){
+          navigator.sendBeacon(API_URL, blob);
+        }else{
+          fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) }).catch(()=>{});
+        }
+      }catch(e){ /* メール送信は継続 */ }
+    }, { passive: true });
+  })();
+</script>
