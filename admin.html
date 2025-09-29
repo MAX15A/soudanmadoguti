@@ -904,9 +904,8 @@
     setActiveTab('dashboard');
 
     // API同期（必要なら設定値に置き換え）
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzXwrHBs8vm_EuhWfkCqiRou1Alu-API2MzjvIx_GQIVTd-aZ0__Zt8_ryp8rIouCB1/exec';
-    const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
-
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyoqBUTUI50_K01diBNaDj_EykdISFR0IUmxmL7sFBCD-Sl3tA-2ZCko29on7vNWTFi/exec';
+  const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
     async function syncFromAPI(){
       try{
         const url = API_URL + '?token=' + encodeURIComponent(TOKEN);
