@@ -433,6 +433,7 @@
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbxWTsmK_gGXNLd8qnL56jKkREUpY0bdiTF_k0VZCHCOsdWE-81cBplLjz0hefYv8etW/exec';
   const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
+
   (function hookBookingForm(){
     const form = document.querySelector('#booking form');
     if(!form) return;
@@ -449,17 +450,27 @@
           datetime2: document.getElementById('date2')?.value || '',
           summary: document.getElementById('topic')?.value || '',
           notes: document.getElementById('notes')?.value || '',
-          agree: document.getElementById('agree')?.checked || false,
+          agree: (document.getElementById('agree')?.checked ? 'true' : 'false'),
           userAgent: navigator.userAgent
         };
-        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+
+        // x-www-form-urlencoded に変換
+        const params = new URLSearchParams();
+        Object.entries(data).forEach(([k, v]) => params.append(k, v));
+
+        // できるだけ確実に送る（sendBeacon + fetch keepalive）
         if(navigator.sendBeacon){
-          navigator.sendBeacon(API_URL, blob);
-        }else{
-          fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) }).catch(()=>{});
+          navigator.sendBeacon(API_URL, params.toString());
         }
+        // keepalive対応のfetch（ページ遷移中でも送信継続）
+        fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: params.toString(),
+          keepalive: true
+        }).catch(()=>{});
       }catch(e){ /* メール送信は継続 */ }
-    }, { passive: true });
+    }, false); // passive: true は外す
   })();
 </script>
 
