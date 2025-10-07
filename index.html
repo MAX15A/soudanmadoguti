@@ -431,7 +431,7 @@
 
 <!-- 予約フォーム内容 → Google Sheetsへコピー送信（既存の連携） -->
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbypfxhe_NdOItvHNcB77VJ5Zt09LPM0RVEXLKBnecCXxGKdOtSNjfaZY4Wjcb8YSNXd/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbz1HN2jfF0v22JBDqJgItG0-FzeEWFQmAW6nWTO9INz73QkUj5vtbsai0EeDSQP5mi9/exec';
   const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
 
   (function hookBookingForm(){
@@ -450,24 +450,26 @@
           datetime2: document.getElementById('date2')?.value || '',
           summary: document.getElementById('topic')?.value || '',
           notes: document.getElementById('notes')?.value || '',
-          agree: document.getElementById('agree')?.checked || false,
+          agree: document.getElementById('agree')?.checked ? 'true' : 'false',
           userAgent: navigator.userAgent
         };
-        const body = JSON.stringify(data);
 
-        // 1) sendBeacon（ページ遷移中でも到達しやすい）
+        // まず sendBeacon（JSONのまま）
         try {
           if (navigator.sendBeacon) {
+            const body = JSON.stringify(data);
             const blob = new Blob([body], { type: 'application/json' });
             navigator.sendBeacon(API_URL, blob);
           }
         } catch(_) {}
 
-        // 2) 予備のfetch（keepaliveでさらに到達率アップ）
+        // 予備のfetchは URLエンコードにしてプリフライト回避
+        const params = new URLSearchParams();
+        Object.entries(data).forEach(([k, v]) => params.append(k, v));
         fetch(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: params.toString(),
           keepalive: true
         }).catch(()=>{});
       }catch(e){ /* メール送信は継続 */ }
