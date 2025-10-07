@@ -458,53 +458,49 @@ function doGet(e) {
 }
 
 // POST: 予約を1行追記（JSONでもフォームエンコードでもOK）
-function doPost(e) {
-  let p = {};
-  const ctype = e?.postData?.type || '';
-  try {
-    if (ctype.indexOf('application/json') !== -1) {
-      p = JSON.parse(e.postData.contents || '{}');
-    } else {
-      p = e?.parameter || {};
-    }
-  } catch (_) { p = {}; }
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbypfxhe_NdOItvHNcB77VJ5Zt09LPM0RVEXLKBnecCXxGKdOtSNjfaZY4Wjcb8YSNXd/exec';
+  const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
 
-  const ok = (p.token === API_TOKEN);
+  (function hookBookingForm(){
+    const form = document.querySelector('#booking form');
+    if(!form) return;
+    form.addEventListener('submit', function(){
+      try{
+        const data = {
+          token: TOKEN,
+          name:  document.getElementById('name')?.value || '',
+          email: document.getElementById('email')?.value || '',
+          method: (document.getElementById('m-inperson')?.checked ? '対面（越谷）' : 'オンライン'),
+          online_tool: document.getElementById('tool')?.value || '',
+          office: document.getElementById('office')?.value || '',
+          datetime1: document.getElementById('date1')?.value || '',
+          datetime2: document.getElementById('date2')?.value || '',
+          summary: document.getElementById('topic')?.value || '',
+          notes: document.getElementById('notes')?.value || '',
+          agree: document.getElementById('agree')?.checked || false,
+          userAgent: navigator.userAgent
+        };
+        const body = JSON.stringify(data);
 
-  const row = [
-    new Date(),
-    p.name || '',
-    p.email || '',
-    p.method || '',
-    p.online_tool || '',
-    p.office || '',
-    p.datetime1 || '',
-    p.datetime2 || '',
-    p.summary || '',
-    p.notes || '',
-    (String(p.agree) === 'true' || String(p.agree) === 'yes') ? 'yes' : 'no',
-    p.userAgent || '',
-    p.ip || '',
-    ok ? 'yes' : 'no'
-  ];
+        // まず sendBeacon（ページ遷移中でも到達しやすい）
+        try {
+          if (navigator.sendBeacon) {
+            const blob = new Blob([body], { type: 'application/json' });
+            navigator.sendBeacon(API_URL, blob);
+          }
+        } catch(_) {}
 
-  try {
-    if (ok) {
-      const ss = SpreadsheetApp.openById(SHEET_ID);
-      const sh = ss.getSheetByName(SHEET_NAME);
-      if (!sh) return json({ ok:false, error:'sheet_not_found' });
-      sh.appendRow(row);
-    }
-    return json({ ok });
-  } catch (err) {
-    return json({ ok:false, error:String(err) });
-  }
-}
-
-function json(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+        // 予備のfetch（keepaliveでさらに到達率を上げる）
+        fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true
+        }).catch(()=>{});
+      }catch(e){ /* メール送信は継続 */ }
+    }, false);
+  })();
 </script>
 
 <!-- 管理者ログイン判定（サイト側） -->
