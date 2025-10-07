@@ -431,34 +431,6 @@
 
 <!-- 予約フォーム内容 → Google Sheetsへコピー送信（既存の連携） -->
 <script>
- /* eslint-disable */
-const SHEET_ID   = '1-vF4EYjLNcJPRjibqPMTfGCGWCFR_mV_3nZDoE5GdxU';
-const SHEET_NAME = 'Bookings';
-const API_TOKEN  = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
-
-// GET: JSONで一覧返す
-function doGet(e) {
-  const token = e?.parameter?.token ?? '';
-  const ok = (token && token === API_TOKEN);
-  try {
-    const ss = SpreadsheetApp.openById(SHEET_ID);
-    const sh = ss.getSheetByName(SHEET_NAME);
-    if (!sh) return json({ ok:false, error:'sheet_not_found' });
-
-    const values = sh.getDataRange().getValues();
-    const headers = values.shift() || [];
-    const rows = values.map(r => {
-      const obj = {}; headers.forEach((h, i) => obj[h] = r[i] ?? '');
-      return obj;
-    });
-    return json({ ok, count: rows.length, data: ok ? rows : [] });
-  } catch (err) {
-    return json({ ok:false, error:String(err) });
-  }
-}
-
-// POST: 予約を1行追記（JSONでもフォームエンコードでもOK）
-<script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbypfxhe_NdOItvHNcB77VJ5Zt09LPM0RVEXLKBnecCXxGKdOtSNjfaZY4Wjcb8YSNXd/exec';
   const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
 
@@ -483,7 +455,7 @@ function doGet(e) {
         };
         const body = JSON.stringify(data);
 
-        // まず sendBeacon（ページ遷移中でも到達しやすい）
+        // 1) sendBeacon（ページ遷移中でも到達しやすい）
         try {
           if (navigator.sendBeacon) {
             const blob = new Blob([body], { type: 'application/json' });
@@ -491,7 +463,7 @@ function doGet(e) {
           }
         } catch(_) {}
 
-        // 予備のfetch（keepaliveでさらに到達率を上げる）
+        // 2) 予備のfetch（keepaliveでさらに到達率アップ）
         fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
