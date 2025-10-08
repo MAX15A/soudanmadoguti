@@ -502,35 +502,80 @@
     const $show   = document.getElementById('adminShowBtn');
     const $msg    = document.getElementById('adminLoginMsg');
 
-    if(!$toggle || !$card) return;
+    if(!$card || !$pass || !$btn || !$show){
+      console.warn('Admin login elements not found.');
+      return;
+    }
 
-    $toggle.addEventListener('click', () => {
-      $card.style.display = ($card.style.display === 'none' || !$card.style.display) ? 'block' : 'none';
-      $msg.textContent = '';
-      if($card.style.display === 'block'){ setTimeout(()=> $pass?.focus(), 0); }
-    });
+    // 1) 読み込み時にフォームを表示（トグルなくても操作可能）
+    $card.style.display = 'block';
 
+    // 2) 既に認証済みならすぐ管理ページへ
+    try {
+      const unlocked = sessionStorage.getItem('admin_unlocked');
+      if (unlocked === 'v1') {
+        location.href = ADMIN_URL;
+        return;
+      }
+    } catch (_) {
+      // sessionStorageが使えない環境ではクエリでフォールバック
+      const params = new URLSearchParams(location.search);
+      if (params.get('admin_unlocked') === 'v1') {
+        location.href = ADMIN_URL;
+        return;
+      }
+    }
+
+    // 3) トグルは任意（開閉できるように維持）
+    if($toggle){
+      $toggle.addEventListener('click', () => {
+        const visible = ($card.style.display !== 'none');
+        $card.style.display = visible ? 'none' : 'block';
+        $msg.textContent = '';
+        if(!visible){ setTimeout(()=> $pass?.focus(), 0); }
+      });
+    }
+
+    // 4) パスワード表示/非表示
     $show.addEventListener('click', () => {
       if($pass.type === 'password'){ $pass.type='text'; $show.textContent='非表示'; }
       else{ $pass.type='password'; $show.textContent='表示'; }
     });
 
-    $btn.addEventListener('click', () => {
-      const pwd = ($pass.value || '').trim();
+    // 5) ログイン処理（前後スペースや全角スペースを除去）
+    function clean(s){
+      return String(s || '').replace(/\u3000/g, ' ').trim();
+    }
+    function doLogin(){
+      const pwd = clean($pass.value);
       if(!pwd){ $msg.textContent='パスワードを入力してください。'; return; }
       if(pwd === ADMIN_PASSWORD){
-        sessionStorage.setItem('admin_unlocked', 'v1');
         $msg.textContent='認証に成功しました。移動します…';
-        location.href = ADMIN_URL;
-      }else{
+        // sessionStorage が使えるならフラグ保存
+        try {
+          sessionStorage.setItem('admin_unlocked', 'v1');
+          location.href = ADMIN_URL;
+          return;
+        } catch (_) {
+          // 使えない場合はクエリでフォールバック
+          const url = new URL(ADMIN_URL, location.href);
+          url.searchParams.set('admin_unlocked', 'v1');
+          location.href = url.toString();
+          return;
+        }
+      } else {
         $msg.textContent='パスワードが違います。';
       }
+    }
+
+    $btn.addEventListener('click', doLogin);
+
+    // 6) Enterキーで確実に実行
+    $pass.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){ e.preventDefault(); doLogin(); }
     });
 
-    $pass.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){ e.preventDefault(); $btn.click(); }
-    });
+    // 7) 自動フォーカス
+    setTimeout(()=> $pass?.focus(), 100);
   })();
 </script>
-</body>
-</html>
