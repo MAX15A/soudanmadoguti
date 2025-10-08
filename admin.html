@@ -2,954 +2,531 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>管理ページ｜人生総合窓口</title>
+  <title>人生総合窓口｜社会福祉士による悩み相談（オンライン・対面｜埼玉・越谷）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    /* Pastel one-page theme (no JS) */
     :root{
       --bg1:#f7fbff; --bg2:#f2fdf7;
       --card:#ffffff; --ink:#1f2937; --sub:#6b7280;
       --brand:#86efac; --brand-ink:#14532d; --accent:#bfdbfe;
       --border:#e5e7eb; --muted:#9ca3af; --warn:#b45309;
       --radius:14px; --shadow:0 10px 24px rgba(2,6,23,.05);
-      --link:#166534; --link-h:#065f46; --danger:#b91c1c; --ok:#047857;
+      --link:#166534; --link-h:#065f46;
     }
-    body{margin:0; color:var(--ink); background:linear-gradient(180deg,var(--bg1),var(--bg2));
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif; line-height:1.65}
+    .site{color:var(--ink); background:linear-gradient(180deg,var(--bg1),var(--bg2)); font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif; line-height:1.65}
     a{color:var(--link); text-decoration:none}
     a:hover{text-decoration:underline; color:var(--link-h)}
+    img{max-width:100%; height:auto}
     .container{width:min(1100px,92vw); margin:0 auto}
     .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .pill{border-radius:999px}
     .sub{color:var(--sub)}
     .note{color:var(--muted); font-size:.92rem}
-    .btn{display:inline-block; padding:10px 16px; border-radius:999px; font-weight:700; box-shadow:var(--shadow); border:none; cursor:pointer}
+    .btn{display:inline-block; padding:10px 16px; border-radius:999px; font-weight:700; box-shadow:var(--shadow)}
     .btn-primary{background:var(--brand-ink); color:#fff}
     .btn-outline{background:#fff; color:var(--brand-ink); border:2px solid var(--brand-ink)}
-    .btn-danger{background:var(--danger); color:#fff}
-    .section{padding:24px 0}
-    h1{font-size:clamp(22px,4vw,32px); margin:0}
-    .h2{font-size:1.2rem; margin:0 0 12px}
+    .section{padding:34px 0}
+    .title{font-size:clamp(26px,4vw,40px); line-height:1.25; margin:0 0 10px}
+    .h2{font-size:1.4rem; margin:0 0 16px}
     .grid-2{display:grid; gap:16px; grid-template-columns:repeat(2,1fr)}
     .grid-3{display:grid; gap:16px; grid-template-columns:repeat(3,1fr)}
     .stack{display:grid; gap:10px}
+
+    /* Header */
     .header{position:sticky; top:0; z-index:10; background:rgba(255,255,255,.9); backdrop-filter:saturate(150%) blur(8px); border-bottom:1px solid var(--border)}
     .nav{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
     .logo{display:flex; align-items:center; gap:10px; font-weight:800}
     .logo-badge{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--brand); box-shadow:var(--shadow)}
-    .tabs{display:flex; gap:8px; flex-wrap:wrap}
-    .tab-btn{padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:#fff; cursor:pointer}
-    .tab-btn.active{background:var(--brand); color:var(--brand-ink); border-color:var(--brand)}
-    table{width:100%; border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--border); padding:8px; text-align:left; vertical-align:top}
-    th{background:#f9fafb; font-weight:700}
-    tr:hover{background:#f9fbff}
-    .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .menu{display:flex; gap:18px; list-style:none; margin:0; padding:0}
+    .menu a{color:var(--ink); font-weight:600}
+
+    /* Hero */
+    .hero{padding:48px 0 24px}
+    .hero-grid{display:grid; gap:24px; grid-template-columns:1.2fr .8fr; align-items:center}
+    .badges{display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 20px}
+    .badge{background:#ffffffb3; border:1px solid var(--border); padding:6px 12px; border-radius:999px; color:var(--sub); font-weight:700; font-size:.92rem}
+
+    /* Steps */
+    .step{padding:16px}
+    .num{width:34px; height:34px; border-radius:50%; background:var(--accent); color:#1e3a8a; display:grid; place-items:center; font-weight:800; margin-bottom:8px}
+
+    /* Services / Price / Profile */
+    .service{padding:16px; display:grid; gap:8px}
+    .price{padding:20px; display:grid; gap:10px}
+    .price-tag{font-size:2rem; font-weight:900; color:var(--brand-ink)}
+    .profile{padding:16px; display:grid; grid-template-columns:64px 1fr; gap:12px; align-items:start}
+
+    /* Form */
+    form{display:grid; gap:12px}
     .field{display:grid; gap:6px}
-    input,select,textarea{border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:1rem; background:#fff}
-    textarea{min-height:100px; resize:vertical}
+    label{font-weight:700}
+    input,select,textarea{border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:1rem; background:#fff}
+    textarea{min-height:120px; resize:vertical}
     input:focus,select:focus,textarea:focus,button:focus{outline:3px solid #fde68a; outline-offset:1px}
-    .pill{border-radius:999px; padding:2px 8px; font-size:.85rem; border:1px solid var(--border); display:inline-block}
-    .pill.ok{color:var(--ok); border-color:#d1fae5; background:#ecfdf5}
-    .pill.warn{color:var(--warn); border-color:#fde68a; background:#fffbeb}
-    .pill.danger{color:var(--danger); border-color:#fecaca; background:#fef2f2}
-    .footer{border-top:1px solid var(--border); padding:20px 0; color:var(--sub); font-size:.95rem; margin-top:20px}
-    @media (max-width:900px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+    .seg{display:inline-grid; grid-auto-flow:column; gap:8px; align-items:center}
+    .seg label{padding:6px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; font-weight:700; color:var(--ink); background:#fff}
+    #m-online,#m-inperson{position:absolute; left:-9999px}
+    #m-online:checked + label[for="m-online"], #m-inperson:checked + label[for="m-inperson"]{background:var(--brand); color:var(--brand-ink); border-color:var(--brand)}
+    .panel{display:none; border:1px dashed var(--border); padding:12px; border-radius:10px; background:#fff}
+    #m-online:checked ~ .panel.online{display:block}
+    #m-inperson:checked ~ .panel.inperson{display:block}
+
+    /* Footer */
+    .footer{border-top:1px solid var(--border); padding:20px 0; color:var(--sub); font-size:.95rem}
+
+    /* RWD */
+    @media (max-width:900px){
+      .hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}
+      .menu{display:none}
+    }
   </style>
 </head>
 <body>
+<div class="site">
+  <!-- Header -->
   <header class="header">
     <div class="container nav">
       <div class="logo">
-        <div class="logo-badge" aria-hidden="true">🗂️</div>
+        <div class="logo-badge" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="24" r="18" fill="#a7f3d0"></circle>
+            <rect x="29" y="24" width="6" height="24" rx="3" fill="#8b5e3c"></rect>
+            <circle cx="22" cy="22" r="10" fill="#bbf7d0"></circle>
+            <circle cx="42" cy="22" r="10" fill="#bbf7d0"></circle>
+          </svg>
+        </div>
         <div>
-          <div style="font-weight:800;">管理ページ</div>
-          <div class="sub" style="font-size:.95rem;">人生総合窓口（認証後のみ閲覧）</div>
+          <div style="font-weight:800;">人生総合窓口</div>
+          <div class="sub" style="font-size:.95rem;">社会福祉士による悩み相談（オンライン・対面｜埼玉・越谷）</div>
         </div>
       </div>
-      <div class="toolbar">
-        <button class="btn btn-outline" id="exportAllBtn">全データをエクスポート</button>
-        <label class="btn btn-outline">
-          CSVインポート
-          <input type="file" id="importInput" accept=".csv,.txt" multiple style="display:none">
-        </label>
-        <button class="btn btn-outline" id="syncApiBtn" title="Google Sheetsから最新予約を取得">APIから同期</button>
-        <button class="btn btn-outline" id="clearLocalBtn">ローカル保存を削除</button>
-      </div>
+      <nav aria-label="主要ナビゲーション">
+        <ul class="menu">
+          <li><a href="#services">サービス</a></li>
+          <li><a href="#price">料金</a></li>
+          <li><a href="#booking">予約</a></li>
+          <li><a href="#faq">よくある質問</a></li>
+          <li><a href="#access">アクセス</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
-  <main class="container">
-    <section class="section">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="dashboard">ダッシュボード</button>
-        <button class="tab-btn" data-tab="clients">クライアント</button>
-        <button class="tab-btn" data-tab="sessions">面談（セッション）</button>
-        <button class="tab-btn" data-tab="bookings">予約</button>
-        <button class="tab-btn" data-tab="invoices">請求</button>
-        <button class="tab-btn" data-tab="settings">設定</button>
-      </div>
-    </section>
-
-    <!-- Dashboard -->
-    <section id="dashboard" class="section card" style="padding:16px;">
-      <h2 class="h2">ダッシュボード</h2>
-      <div class="grid-3">
-        <div class="card" style="padding:12px;">
-          <div class="sub">今日の面談</div>
-          <div style="font-weight:900; font-size:1.6rem;" id="statTodaySessions">0</div>
-        </div>
-        <div class="card" style="padding:12px;">
-          <div class="sub">未処理予約</div>
-          <div style="font-weight:900; font-size:1.6rem;" id="statPendingBookings">0</div>
-        </div>
-        <div class="card" style="padding:12px;">
-          <div class="sub">入金待ち</div>
-          <div style="font-weight:900; font-size:1.6rem;" id="statUnpaidInvoices">0</div>
-        </div>
-      </div>
-
-      <div class="grid-2" style="margin-top:16px;">
-        <div class="card" style="padding:12px;">
-          <div class="toolbar">
-            <div class="field" style="min-width:200px;">
-              <label for="searchAll">全体検索</label>
-              <input id="searchAll" type="search" placeholder="氏名・メール・テーマ・タグなど">
-            </div>
+  <main>
+    <!-- Hero -->
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <h1 id="hero-title" class="title">社会福祉士に、日々の悩みを気軽に相談しませんか？</h1>
+          <p class="sub">仕事・家族・介護・お金・人間関係など、くらしの困りごとを国家資格の社会福祉士が丁寧にサポート。オンライン（全国）と対面（埼玉・越谷）に対応しています。</p>
+          <div class="badges" aria-label="特徴">
+            <span class="badge">💳 1回 8,000円（60分）</span>
+            <span class="badge">🧑‍⚕️ 社会福祉士が担当（1名）</span>
+            <span class="badge">🖥️ オンライン / 🏠 対面（越谷）</span>
+            <span class="badge">🔒 プライバシー配慮</span>
           </div>
-          <div id="searchResults" class="note" style="margin-top:8px;">検索結果はここに表示されます</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#booking">オンライン相談を予約</a>
+            <a class="btn btn-outline" href="#booking">対面（越谷）を予約</a>
+            <!-- 直接メール問い合わせボタンは削除済み -->
+          </div>
+          <p class="note" style="margin-top:10px;">緊急の危険がある場合は相談ではなく、119/110にご連絡ください。</p>
         </div>
-        <div class="card" style="padding:12px;">
+        <div class="card" style="padding:16px;">
+          <h2 class="h2">初めての方へ</h2>
           <div class="stack">
-            <div><span class="pill ok">稼働</span> 次の面談までの時間を確認し、準備を進めましょう。</div>
-            <div><span class="pill warn">要フォロー</span> 一週間以上連絡が途絶えている方に近況確認を。</div>
-            <div><span class="pill danger">重要</span> リスクフラグのあるケースは担当者で共有・確認。</div>
+            <div class="sub">ご希望やペースに合わせて、必要な支援やつながり先も一緒に考えます。</div>
+            <ul class="sub" style="margin:8px 0 0 18px;">
+              <li>押しつけのない丁寧なヒアリング</li>
+              <li>一人で抱えこまないための場所</li>
+              <li>解決の見通しづくりをお手伝い</li>
+            </ul>
+            <div class="note">医療行為・緊急対応は行っていません。</div>
           </div>
         </div>
       </div>
-
-      <div class="grid-2" style="margin-top:16px;">
-        <div>
-          <h3 class="h2">本日のスケジュール</h3>
-          <table id="todaySessionsTable">
-            <thead><tr><th>時刻</th><th>氏名</th><th>方法</th><th>会場/ツール</th><th>メモ</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div>
-          <h3 class="h2">未処理の予約</h3>
-          <table id="pendingBookingsTable">
-            <thead><tr><th>氏名</th><th>希望日時1</th><th>希望日時2</th><th>メール</th><th>ステータス</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
     </section>
 
-    <!-- Clients -->
-    <section id="clients" class="section card" style="padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 class="h2">クライアント管理</h2>
-        <button class="btn btn-primary" id="addClientBtn">新規クライアント追加</button>
-      </div>
-
-      <div class="toolbar" style="margin-top:10px;">
-        <input type="search" id="clientSearch" placeholder="氏名・メール・タグで検索" style="min-width:200px;">
-        <select id="clientRiskFilter">
-          <option value="">リスク絞り込みなし</option>
-          <option value="none">なし</option>
-          <option value="low">低</option>
-          <option value="mid">中</option>
-          <option value="high">高</option>
-        </select>
-        <button class="btn btn-outline" id="exportClientsBtn">クライアントCSVをエクスポート</button>
-        <label class="btn btn-outline">
-          クライアントCSVインポート
-          <input type="file" id="importClientsInput" accept=".csv" style="display:none">
-        </label>
-      </div>
-
-      <table id="clientsTable" style="margin-top:10px;">
-        <thead>
-          <tr>
-            <th>氏名</th><th>メール</th><th>電話</th><th>市区町村</th><th>主訴</th><th>タグ</th><th>リスク</th><th>最終面談</th><th>回数</th><th>操作</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div id="clientFormCard" class="card" style="padding:12px; margin-top:16px; display:none;">
-        <h3 class="h2" id="clientFormTitle">新規クライアント</h3>
-        <div class="grid-2">
-          <div class="field"><label>氏名</label><input id="f_name"></div>
-          <div class="field"><label>メール</label><input id="f_email" type="email"></div>
-          <div class="field"><label>電話</label><input id="f_phone"></div>
-          <div class="field"><label>市区町村</label><input id="f_city"></div>
-          <div class="field"><label>主訴</label><input id="f_main_issue" placeholder="例：仕事のストレス"></div>
-          <div class="field"><label>タグ（カンマ区切り）</label><input id="f_tags" placeholder="仕事,家族,睡眠"></div>
-          <div class="field"><label>リスク</label>
-            <select id="f_risk">
-              <option value="none">なし</option>
-              <option value="low">低</option>
-              <option value="mid">中</option>
-              <option value="high">高</option>
-            </select>
+    <!-- Flow -->
+    <section class="section" aria-labelledby="how-title">
+      <div class="container">
+        <h2 id="how-title" class="h2">ご利用の流れ</h2>
+        <div class="grid-3">
+          <div class="card step">
+            <div class="num" aria-hidden="true">1</div>
+            <h3 style="margin:0 0 6px;">予約フォームの送信</h3>
+            <p class="sub">オンライン/対面の希望や相談概要、日時候補をご記入ください。</p>
           </div>
-          <div class="field"><label>配慮事項</label><input id="f_notes"></div>
-        </div>
-        <div style="margin-top:10px; display:flex; gap:10px;">
-          <button class="btn btn-primary" id="saveClientBtn">保存</button>
-          <button class="btn btn-outline" id="cancelClientBtn">キャンセル</button>
+          <div class="card step">
+            <div class="num" aria-hidden="true">2</div>
+            <h3 style="margin:0 0 6px;">日程・方法の確定</h3>
+            <p class="sub">メールで日程と方法（Zoom/Google Meet/対面・越谷）を確定します。</p>
+          </div>
+          <div class="card step">
+            <div class="num" aria-hidden="true">3</div>
+            <h3 style="margin:0 0 6px;">当日ご相談（60分）</h3>
+            <p class="sub">落ち着ける環境でお話を伺い、今後のステップを一緒に整理します。</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Sessions -->
-    <section id="sessions" class="section card" style="padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 class="h2">面談（セッション）管理</h2>
-        <button class="btn btn-primary" id="addSessionBtn">新規面談を記録</button>
-      </div>
-
-      <div class="toolbar" style="margin-top:10px;">
-        <input type="search" id="sessionSearch" placeholder="氏名・概要・タグで検索" style="min-width:200px;">
-        <select id="sessionModeFilter">
-          <option value="">形態（全て）</option>
-          <option value="オンライン">オンライン</option>
-          <option value="対面">対面</option>
-        </select>
-        <button class="btn btn-outline" id="exportSessionsBtn">面談CSVをエクスポート</button>
-        <label class="btn btn-outline">
-          面談CSVインポート
-          <input type="file" id="importSessionsInput" accept=".csv" style="display:none">
-        </label>
-      </div>
-
-      <table id="sessionsTable" style="margin-top:10px;">
-        <thead>
-          <tr>
-            <th>日時</th><th>氏名</th><th>形態</th><th>ツール/会場</th><th>要約</th><th>宿題</th><th>次回目標</th><th>回数</th><th>操作</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div id="sessionFormCard" class="card" style="padding:12px; margin-top:16px; display:none;">
-        <h3 class="h2" id="sessionFormTitle">新規面談</h3>
+    <!-- Services -->
+    <section id="services" class="section" aria-labelledby="services-title">
+      <div class="container">
+        <h2 id="services-title" class="h2">サービス内容</h2>
         <div class="grid-2">
-          <div class="field"><label>クライアント（氏名）</label><input id="s_client_name" list="clientNameList"><datalist id="clientNameList"></datalist></div>
-          <div class="field"><label>日時</label><input id="s_at" type="datetime-local"></div>
-          <div class="field"><label>形態</label><select id="s_mode"><option>オンライン</option><option>対面</option></select></div>
-          <div class="field"><label>ツール/会場</label><input id="s_tool_or_room" placeholder="Zoom / Google Meet / 越谷オフィスなど"></div>
-          <div class="field"><label>要約</label><textarea id="s_summary" placeholder="面談の要約、介入/技法など"></textarea></div>
-          <div class="field"><label>宿題</label><input id="s_homework" placeholder="次回までの宿題・行動"></div>
-          <div class="field"><label>次回目標</label><input id="s_next_goal" placeholder="次回の目標・合意事項"></div>
-          <div class="field"><label>回数（通算）</label><input id="s_count_index" type="number" min="1" value="1"></div>
-        </div>
-        <div style="margin-top:10px; display:flex; gap:10px;">
-          <button class="btn btn-primary" id="saveSessionBtn">保存</button>
-          <button class="btn btn-outline" id="cancelSessionBtn">キャンセル</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Bookings -->
-    <section id="bookings" class="section card" style="padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 class="h2">予約管理</h2>
-        <button class="btn btn-primary" id="addBookingBtn">手動で予約追加</button>
-      </div>
-
-      <div class="toolbar" style="margin-top:10px;">
-        <input type="search" id="bookingSearch" placeholder="氏名・メール・ステータスで検索" style="min-width:200px;">
-        <select id="bookingStatusFilter">
-          <option value="">ステータス（全て）</option>
-          <option value="リクエスト">リクエスト</option>
-          <option value="確定">確定</option>
-          <option value="キャンセル">キャンセル</option>
-        </select>
-        <button class="btn btn-outline" id="exportBookingsBtn">予約CSVをエクスポート</button>
-        <label class="btn btn-outline">
-          予約CSVインポート
-          <input type="file" id="importBookingsInput" accept=".csv" style="display:none">
-        </label>
-      </div>
-
-      <table id="bookingsTable" style="margin-top:10px;">
-        <thead>
-          <tr><th>氏名</th><th>メール</th><th>希望日時1</th><th>希望日時2</th><th>確定日時</th><th>ステータス</th><th>メモ</th><th>操作</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div id="bookingFormCard" class="card" style="padding:12px; margin-top:16px; display:none;">
-        <h3 class="h2" id="bookingFormTitle">新規予約</h3>
-        <div class="grid-2">
-          <div class="field"><label>氏名</label><input id="b_name"></div>
-          <div class="field"><label>メール</label><input id="b_email" type="email"></div>
-          <div class="field"><label>希望日時1</label><input id="b_desired1" type="datetime-local"></div>
-          <div class="field"><label>希望日時2</label><input id="b_desired2" type="datetime-local"></div>
-          <div class="field"><label>確定日時</label><input id="b_confirmed" type="datetime-local"></div>
-          <div class="field"><label>ステータス</label><select id="b_status"><option>リクエスト</option><option>確定</option><option>キャンセル</option></select></div>
-          <div class="field"><label>メモ</label><input id="b_memo"></div>
-        </div>
-        <div style="margin-top:10px; display:flex; gap:10px;">
-          <button class="btn btn-primary" id="saveBookingBtn">保存</button>
-          <button class="btn btn-outline" id="cancelBookingBtn">キャンセル</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Invoices -->
-    <section id="invoices" class="section card" style="padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 class="h2">請求管理</h2>
-        <button class="btn btn-primary" id="addInvoiceBtn">請求を作成</button>
-      </div>
-
-      <div class="toolbar" style="margin-top:10px;">
-        <input type="search" id="invoiceSearch" placeholder="氏名・番号で検索" style="min-width:200px;">
-        <select id="invoicePaidFilter">
-          <option value="">入金状況（全て）</option>
-          <option value="未入金">未入金</option>
-          <option value="入金済み">入金済み</option>
-        </select>
-        <button class="btn btn-outline" id="exportInvoicesBtn">請求CSVをエクスポート</button>
-        <label class="btn btn-outline">
-          請求CSVインポート
-          <input type="file" id="importInvoicesInput" accept=".csv" style="display:none">
-        </label>
-      </div>
-
-      <table id="invoicesTable" style="margin-top:10px;">
-        <thead>
-          <tr><th>請求日</th><th>氏名</th><th>金額</th><th>決済方法</th><th>入金状況</th><th>請求書番号</th><th>領収書番号</th><th>操作</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div id="invoiceFormCard" class="card" style="padding:12px; margin-top:16px; display:none;">
-        <h3 class="h2" id="invoiceFormTitle">新規請求</h3>
-        <div class="grid-2">
-          <div class="field"><label>氏名</label><input id="i_name" list="clientNameList2"><datalist id="clientNameList2"></datalist></div>
-          <div class="field"><label>金額（円）</label><input id="i_amount" type="number" min="0" value="8000"></div>
-          <div class="field"><label>決済方法</label><select id="i_method"><option>銀行振込</option><option>クレジットカード</option></select></div>
-          <div class="field"><label>入金状況</label><select id="i_paid"><option>未入金</option><option>入金済み</option></select></div>
-          <div class="field"><label>請求書番号</label><input id="i_invoice_no" placeholder="INV-2025-001"></div>
-          <div class="field"><label>領収書番号</label><input id="i_receipt_no" placeholder="RCPT-2025-001"></div>
-          <div class="field"><label>請求日</label><input id="i_issued_at" type="date"></div>
-        </div>
-        <div style="margin-top:10px; display:flex; gap:10px;">
-          <button class="btn btn-primary" id="saveInvoiceBtn">保存</button>
-          <button class="btn btn-outline" id="cancelInvoiceBtn">キャンセル</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Settings -->
-    <section id="settings" class="section card" style="padding:16px; display:none;">
-      <h2 class="h2">設定・テンプレート</h2>
-      <div class="grid-2">
-        <div class="card" style="padding:12px;">
-          <div class="field"><label>基本料金（円）</label><input id="set_price" type="number" value="8000"></div>
-          <div class="field"><label>面談時間（分）</label><input id="set_duration" type="number" value="60"></div>
-          <div class="field"><label>同意文書バージョン</label><input id="set_consent_version" placeholder="v1.0"></div>
-          <div class="field"><label>リマインドひな形</label><textarea id="set_reminder_tpl" placeholder="例：明日のご予約の確認..."></textarea></div>
-          <div style="margin-top:10px;"><button class="btn btn-primary" id="saveSettingsBtn">設定を保存</button></div>
-        </div>
-        <div class="card" style="padding:12px;">
-          <div class="note">
-            CSVの項目名リファレンス（1行目にヘッダー）
-            <ul>
-              <li>clients: id,name,email,phone,city,main_issue,tags,risk,last_session_at,count</li>
-              <li>sessions: id,client_name,at,mode,tool_or_room,summary,homework,next_goal,count_index</li>
-              <li>bookings: id,name,email,desired_at_1,desired_at_2,confirmed_at,status,memo</li>
-              <li>invoices: id,name,amount,method,paid,invoice_no,receipt_no,issued_at</li>
+          <div class="card service">
+            <h3>オンライン相談（Zoom / Google Meet）</h3>
+            <p class="sub">全国どこからでも。映像なし（音声のみ）もOKです。</p>
+            <ul class="sub" style="margin:0 0 0 18px;">
+              <li>1回 60分 / 8,000円</li>
+              <li>録画なし・個人情報の取り扱いに配慮</li>
+              <li>夜間・土日枠あり（空き状況により変動）</li>
+            </ul>
+          </div>
+          <div class="card service">
+            <h3>対面相談（埼玉・越谷）</h3>
+            <p class="sub">越谷のプライベート空間でお話できます。</p>
+            <ul class="sub" style="margin:0 0 0 18px;">
+              <li>1回 60分 / 8,000円</li>
+              <li>アクセスしやすい会場をご案内</li>
+              <li>お連れさま同席もご相談ください</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="footer">
-      <div>© 人生総合窓口（管理ページ）</div>
-      <div class="note">このページは個人情報を扱います。認証のない公開環境での運用は避けてください。</div>
-    </footer>
+    <!-- Price -->
+    <section id="price" class="section" aria-labelledby="price-title">
+      <div class="container">
+        <h2 id="price-title" class="h2">料金</h2>
+        <div class="grid-3">
+          <div class="card price">
+            <div class="price-tag">¥8,000 <span class="sub" style="font-size:1rem;">/ 回（60分）</span></div>
+            <div class="sub">オンライン・対面いずれも同料金です。</div>
+            <div class="note">お支払い方法：銀行振込 / paypay（事前決済）</div>
+          </div>
+          <div class="card price">
+            <h3 style="margin:0;">キャンセルポリシー</h3>
+            <ul class="sub" style="margin:6px 0 0 18px;">
+              <li>前日まで：無料</li>
+              <li>当日：料金の50%</li>
+              <li>無連絡：料金の100%</li>
+            </ul>
+          </div>
+          <div class="card price">
+            <h3 style="margin:0;">プライバシー</h3>
+            <ul class="sub" style="margin:6px 0 0 18px;">
+              <li>守秘義務に基づき丁寧に取り扱います</li>
+              <li>情報は目的以外に使用しません</li>
+              <li>緊急時は安全確保を最優先します</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="section" aria-labelledby="profiles-title">
+      <div class="container">
+        <h2 id="profiles-title" class="h2">担当社会福祉士</h2>
+        <div class="card profile">
+          <div aria-hidden="true" style="width:64px;height:64px;border-radius:50%;background:#e2e8f0;display:grid;place-items:center;font-weight:800;">S</div>
+          <div>
+            <h3 style="margin:0;">福井 寿子(ふくい　ひさこ)</h3>
+            <div class="note">社会福祉士（担当は1名です）</div>
+            <p class="sub" style="margin:6px 0 0;">生活の困りごと、家族・介護、就労、制度活用のご相談に幅広く対応。安心して話せる雰囲気づくりを大切にしています。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking -->
+    <section id="booking" class="section" aria-labelledby="booking-title">
+      <div class="container">
+        <h2 id="booking-title" class="h2">予約フォーム</h2>
+        <div class="card" style="padding:16px;">
+          <form action="https://formsubmit.co/zinseisougoumadoguti@gmail.com" method="post" accept-charset="UTF-8">
+            <input type="hidden" name="_subject" value="【予約】社会福祉士相談（8,000円/60分）">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none">
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="name">お名前</label>
+                <input id="name" name="お名前" type="text" placeholder="山田 太郎" required>
+              </div>
+              <div class="field">
+                <label for="email">メールアドレス</label>
+                <input id="email" name="email" type="email" placeholder="taro@example.com" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <span>希望の相談方法</span>
+              <div class="seg">
+                <input type="radio" id="m-online" name="相談方法" value="オンライン" checked>
+                <label for="m-online">オンライン</label>
+                <input type="radio" id="m-inperson" name="相談方法" value="対面（越谷）">
+                <label for="m-inperson">対面（越谷）</label>
+              </div>
+            </div>
+
+            <div class="panel online">
+              <div class="field">
+                <label for="tool">オンラインの希望ツール</label>
+                <select id="tool" name="オンラインツール">
+                  <option value="">特に指定なし</option>
+                  <option>Zoom</option>
+                  <option>Google Meet</option>
+                </select>
+              </div>
+              <div class="note">通信環境の良い場所・イヤホンのご使用をおすすめします。</div>
+            </div>
+
+            <div class="panel inperson">
+              <div class="field">
+                <label for="office">来室先</label>
+                <input id="office" name="来室先" value="越谷オフィス（埼玉）" readonly>
+              </div>
+              <div class="note">個室のご希望があれば備考にご記入ください。</div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="date1">日時候補1</label>
+                <input id="date1" name="日時候補1" type="datetime-local" required>
+              </div>
+              <div class="field">
+                <label for="date2">日時候補2（任意）</label>
+                <input id="date2" name="日時候補2" type="datetime-local">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="topic">相談したいこと（概要）</label>
+              <textarea id="topic" name="相談概要" placeholder="例）仕事のストレスと睡眠の悩みについて..."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="notes">配慮事項・伝えておきたいこと（任意）</label>
+              <textarea id="notes" name="配慮事項" placeholder="例）同席者あり／メール連絡希望 など"></textarea>
+            </div>
+
+            <div class="card" style="padding:12px;">
+              <div><strong>お支払い金額</strong>：8,000円 / 回（60分）</div>
+              <div class="note">決済方法はご予約確定メールにてご案内します。</div>
+            </div>
+
+            <div class="field">
+              <input id="agree" name="同意" type="checkbox" required>
+              <label for="agree">プライバシーポリシー・キャンセルポリシーに同意します</label>
+              <div class="note">医療行為は行いません。緊急時は110/119に連絡してください。</div>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary">この内容で申し込む（送信）</button>
+              <button type="reset" class="btn btn-outline">入力をクリア</button>
+            </div>
+          </form>
+          <p class="note" style="margin-top:10px;">
+            送信後、確認ページ（または完了ページ）へ移動します。
+            <!-- 直接メール案内は削除 -->
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title" class="h2">よくある質問</h2>
+        <div class="grid-2">
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">相談時間は延長できますか？</h3>
+            <p class="sub">原則60分ですが、当日の空き状況により30分単位で延長可能です（別料金）。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">どんな内容を相談できますか？</h3>
+            <p class="sub">仕事や家族、介護、福祉制度、金銭管理、人間関係、生活リズムなど、日常の困りごと全般に対応します。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">守秘義務は守られますか？</h3>
+            <p class="sub">社会福祉士の守秘義務に基づき、相談内容は厳重に取り扱います（生命の危険がある場合などを除く）。</p>
+          </div>
+          <div class="card" style="padding:16px;">
+            <h3 style="margin:0 0 6px;">未成年でも利用できますか？</h3>
+            <p class="sub">可能です。内容により保護者の同意や同席をお願いする場合があります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Access -->
+    <section id="access" class="section" aria-labelledby="access-title">
+      <div class="container">
+        <h2 id="access-title" class="h2">アクセス（対面・越谷）</h2>
+        <div class="card" style="padding:16px;">
+          <h3 style="margin:0 0 6px;">越谷オフィス（埼玉県）</h3>
+          <p class="sub">〒343-0042 埼玉県越谷市千間台東１丁目</p>
+          <p class="note">最寄り駅：せんげん台駅（詳細はご予約確定時にご案内）</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms / Privacy -->
+    <section id="terms" class="section" aria-labelledby="terms-title">
+      <div class="container">
+        <h2 id="terms-title" class="h2">利用規約（要約）</h2>
+        <div class="card" style="padding:16px;">
+          <p class="sub">本サービスは一般的な相談支援です。医療的判断や緊急対応は行いません。予約の確定は当方からのメールをもって完了します。キャンセルポリシーは料金欄をご参照ください。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="section" aria-labelledby="privacy-title">
+      <div class="container">
+        <h2 id="privacy-title" class="h2">プライバシーポリシー（要約）</h2>
+        <div class="card" style="padding:16px;">
+          <p class="sub">お預かりする個人情報は、予約および相談対応の目的に限り利用します。法令に基づく場合を除き、ご本人の同意なく第三者に提供しません。安全管理に努めます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 管理者ログイン（サイト側） -->
+    <section class="section" aria-labelledby="admin-title">
+      <div class="container">
+        <h2 id="admin-title" class="h2">管理者ログイン</h2>
+        <div style="text-align:center;">
+          <button id="adminLoginToggle" class="btn btn-outline">ログインフォームを開く</button>
+        </div>
+        <div id="adminLoginCard" class="card" style="display:none; padding:16px; margin-top:12px; max-width:520px; margin-left:auto; margin-right:auto;">
+          <div class="field">
+            <label for="adminPass">アカウントパスワード</label>
+            <input id="adminPass" type="password" autocomplete="current-password" placeholder="パスワードを入力">
+          </div>
+          <div style="margin-top:10px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button id="adminLoginBtn" class="btn btn-primary" type="button">ログイン</button>
+            <button id="adminShowBtn" class="btn btn-outline" type="button">表示</button>
+          </div>
+          <div id="adminLoginMsg" class="note" style="margin-top:8px;"></div>
+        </div>
+        <div class="note" style="margin-top:10px; text-align:center;">管理ページは認証後に表示されます。セキュリティのため、第三者と共有しないでください。</div>
+      </div>
+    </section>
   </main>
 
-  <script>
-    // 認証ガード（公開サイトからのログイン済みフラグ確認）
-    (function accessGuard(){
-      const v = sessionStorage.getItem('admin_unlocked');
-      if(v === 'v1'){ return; } // ログイン済み
+  <footer class="footer" role="contentinfo">
+    <div class="container" style="display:grid; gap:6px;">
+      <div>© 人生総合窓口</div>
+      <div class="sub">
+        <a href="#terms">利用規約</a> ・
+        <a href="#privacy">プライバシーポリシー</a> ・
+        <a href="#booking">お問い合わせ</a>
+      </div>
+      <div class="note">本サイトは一般的な相談支援サービスです。緊急時は119/110をご利用ください。</div>
+    </div>
+  </footer>
+</div>
 
-      // 未ログイン時は簡易UIを表示
-      document.body.innerHTML = `
-        <div style="max-width:420px;margin:40px auto;padding:16px;border:1px solid #e5e7eb;border-radius:14px;background:#fff;box-shadow:0 10px 24px rgba(2,6,23,.05);font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans JP','Hiragino Kaku Gothic ProN',Meiryo,Arial,sans-serif;line-height:1.6;color:#1f2937;">
-          <h2 style="margin:0 0 8px;font-size:1.2rem;">管理ページへのアクセス</h2>
-          <div style="color:#6b7280;">公開サイトの「管理者ログイン」から入るのが安全です。直接アクセスする場合はパスワードを入力してください。</div>
-          <div style="margin-top:12px;">
-            <label style="font-weight:700;display:block;margin-bottom:6px;">パスワード</label>
-            <input id="ad_pw" type="password" style="width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px;">
-          </div>
-          <div style="margin-top:10px;display:flex;gap:10px;justify-content:flex-end;">
-            <button id="ad_btn" style="padding:8px 14px;border-radius:999px;border:none;background:#14532d;color:#fff;font-weight:700;cursor:pointer;">入室</button>
-          </div>
-          <div id="ad_msg" style="margin-top:8px;color:#6b7280;font-size:.92rem;"></div>
-        </div>
-      `;
-      document.getElementById('ad_btn').addEventListener('click', ()=>{
-        const pw = (document.getElementById('ad_pw').value || '').trim();
-        if(pw === 'hisakohisako'){
-          sessionStorage.setItem('admin_unlocked','v1');
-          location.reload();
-        }else{
-          document.getElementById('ad_msg').textContent = 'パスワードが違います。';
-        }
-      });
-    })();
-  </script>
-
-  <script>
-    // ====== ここから下は管理ページの機能一式（前回と同様） ======
-    const store = {
-      get(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }catch(e){ return fallback; } },
-      set(key, val){ localStorage.setItem(key, JSON.stringify(val)); },
-      del(key){ localStorage.removeItem(key); }
-    };
-    const KEY = { clients:'clinic_clients', sessions:'clinic_sessions', bookings:'clinic_bookings', invoices:'clinic_invoices', settings:'clinic_settings' };
-
-    let clients = store.get(KEY.clients, []);
-    let sessions = store.get(KEY.sessions, []);
-    let bookings = store.get(KEY.bookings, []);
-    let invoices = store.get(KEY.invoices, []);
-    let settings = store.get(KEY.settings, { price:8000, duration:60, consent_version:'', reminder_tpl:'' });
-
-    const byId = (id) => document.getElementById(id);
-    const fmtDate = (s) => !s ? '' : new Date(s).toLocaleString();
-    const todayISO = () => new Date().toISOString().slice(0,10);
-    const uid = (prefix='ID') => prefix + '-' + Math.random().toString(36).slice(2,8) + '-' + Date.now().toString(36);
-
-    function setActiveTab(tab){
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      document.querySelectorAll('main section.section.card').forEach(sec => sec.style.display = (sec.id === tab ? 'block' : 'none'));
-    }
-
-    function toCSV(rows){
-      if(!rows || rows.length === 0) return '';
-      const headers = Object.keys(rows[0]);
-      const esc = v => String(v ?? '').replace(/"/g,'""');
-      const lines = [headers.join(',')];
-      for(const r of rows){ lines.push(headers.map(h => `"${esc(r[h])}"`).join(',')); }
-      return lines.join('\n');
-    }
-    function parseCSV(text){
-      const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim().length>0);
-      const headers = lines.shift().split(',').map(h=>h.replace(/^"|"$/g,''));
-      const rows = [];
-      for(const line of lines){
-        const cols = []; let i=0, inQ=false, cur='';
-        while(i < line.length){
-          const ch = line[i];
-          if(inQ){
-            if(ch === '"' && line[i+1] === '"'){ cur += '"'; i+=2; continue; }
-            if(ch === '"'){ inQ=false; i++; continue; }
-            cur += ch; i++; continue;
-          }else{
-            if(ch === '"'){ inQ=true; i++; continue; }
-            if(ch === ','){ cols.push(cur); cur=''; i++; continue; }
-            cur += ch; i++; continue;
-          }
-        }
-        cols.push(cur);
-        const obj = {}; headers.forEach((h,idx)=> obj[h] = cols[idx]?.trim() ?? '');
-        rows.push(obj);
-      }
-      return rows;
-    }
-
-    function refreshDashboard(){
-      const today = new Date(); const y = today.getFullYear(), m = today.getMonth(), d = today.getDate();
-      const start = new Date(y,m,d,0,0,0); const end = new Date(y,m,d,23,59,59);
-      const todays = sessions.filter(s => { const t = new Date(s.at); return t >= start && t <= end; });
-      byId('statTodaySessions').textContent = todays.length;
-      const pending = bookings.filter(b => (b.status||'') === 'リクエスト');
-      byId('statPendingBookings').textContent = pending.length;
-      const unpaid = invoices.filter(i => (i.paid||'未入金') === '未入金');
-      byId('statUnpaidInvoices').textContent = unpaid.length;
-
-      const tbody1 = byId('todaySessionsTable').querySelector('tbody');
-      tbody1.innerHTML = todays.sort((a,b)=> new Date(a.at)-new Date(b.at)).map(s => `
-        <tr><td>${fmtDate(s.at)}</td><td>${s.client_name||''}</td><td>${s.mode||''}</td><td>${s.tool_or_room||''}</td><td>${s.summary||''}</td></tr>
-      `).join('') || '<tr><td colspan="5" class="note">本日の面談はありません</td></tr>';
-
-      const tbody2 = byId('pendingBookingsTable').querySelector('tbody');
-      tbody2.innerHTML = pending.map(b => `
-        <tr><td>${b.name||''}</td><td>${fmtDate(b.desired_at_1)}</td><td>${fmtDate(b.desired_at_2)}</td><td>${b.email||''}</td><td>${b.status||''}</td></tr>
-      `).join('') || '<tr><td colspan="5" class="note">未処理の予約はありません</td></tr>';
-    }
-
-    function refreshClients(){
-      const q = byId('clientSearch').value.trim().toLowerCase();
-      const rf = byId('clientRiskFilter').value;
-      const tbody = byId('clientsTable').querySelector('tbody');
-      const filtered = clients.filter(c => {
-        const str = [c.name,c.email,c.phone,c.city,c.main_issue,c.tags].join(' ').toLowerCase();
-        const okQ = q ? str.includes(q) : true;
-        const okR = rf ? (c.risk||'').toLowerCase() === rf : true;
-        return okQ && okR;
-      });
-      tbody.innerHTML = filtered.map(c => `
-        <tr>
-          <td>${c.name||''}</td><td>${c.email||''}</td><td>${c.phone||''}</td><td>${c.city||''}</td>
-          <td>${c.main_issue||''}</td><td>${c.tags||''}</td>
-          <td>${(c.risk||'none')}</td><td>${fmtDate(c.last_session_at)}</td><td>${c.count||0}</td>
-          <td>
-            <button class="btn btn-outline" onclick="editClient('${c.id}')">編集</button>
-            <button class="btn btn-danger" onclick="deleteClient('${c.id}')">削除</button>
-          </td>
-        </tr>
-      `).join('') || '<tr><td colspan="10" class="note">クライアントが未登録です</td></tr>';
-
-      const dl = byId('clientNameList'); dl.innerHTML = clients.map(c=>`<option value="${c.name}">`).join('');
-      const dl2 = byId('clientNameList2'); dl2.innerHTML = dl.innerHTML;
-    }
-    function showClientForm(editId=null){
-      byId('clientFormCard').style.display = 'block';
-      if(editId){
-        const c = clients.find(x=>x.id===editId);
-        byId('clientFormTitle').textContent = 'クライアントを編集';
-        byId('f_name').value = c.name||'';
-        byId('f_email').value = c.email||'';
-        byId('f_phone').value = c.phone||'';
-        byId('f_city').value = c.city||'';
-        byId('f_main_issue').value = c.main_issue||'';
-        byId('f_tags').value = c.tags||'';
-        byId('f_risk').value = c.risk||'none';
-        byId('f_notes').value = c.notes||'';
-        byId('saveClientBtn').dataset.editId = editId;
-      }else{
-        byId('clientFormTitle').textContent = '新規クライアント';
-        ['f_name','f_email','f_phone','f_city','f_main_issue','f_tags','f_risk','f_notes'].forEach(id=>byId(id).value='');
-        byId('f_risk').value='none';
-        delete byId('saveClientBtn').dataset.editId;
-      }
-    }
-    function editClient(id){ showClientForm(id); }
-    function deleteClient(id){
-      if(!confirm('このクライアントを削除しますか？')) return;
-      clients = clients.filter(c=>c.id!==id);
-      store.set(KEY.clients, clients);
-      refreshClients();
-      refreshDashboard();
-    }
-
-    function refreshSessions(){
-      const q = byId('sessionSearch').value.trim().toLowerCase();
-      const mf = byId('sessionModeFilter').value;
-      const tbody = byId('sessionsTable').querySelector('tbody');
-      const filtered = sessions.filter(s => {
-        const str = [s.client_name,s.summary,s.homework,s.next_goal].join(' ').toLowerCase();
-        const okQ = q ? str.includes(q) : true;
-        const okM = mf ? (s.mode||'') === mf : true;
-        return okQ && okM;
-      }).sort((a,b)=> new Date(b.at)-new Date(a.at));
-      tbody.innerHTML = filtered.map(s => `
-        <tr>
-          <td>${fmtDate(s.at)}</td><td>${s.client_name||''}</td><td>${s.mode||''}</td><td>${s.tool_or_room||''}</td>
-          <td>${s.summary||''}</td><td>${s.homework||''}</td><td>${s.next_goal||''}</td><td>${s.count_index||''}</td>
-          <td>
-            <button class="btn btn-outline" onclick="editSession('${s.id}')">編集</button>
-            <button class="btn btn-danger" onclick="deleteSession('${s.id}')">削除</button>
-          </td>
-        </tr>
-      `).join('') || '<tr><td colspan="9" class="note">面談記録が未登録です</td></tr>';
-    }
-    function showSessionForm(editId=null){
-      byId('sessionFormCard').style.display = 'block';
-      if(editId){
-        const s = sessions.find(x=>x.id===editId);
-        byId('sessionFormTitle').textContent = '面談を編集';
-        byId('s_client_name').value = s.client_name||'';
-        byId('s_at').value = s.at ? s.at.slice(0,16) : '';
-        byId('s_mode').value = s.mode||'オンライン';
-        byId('s_tool_or_room').value = s.tool_or_room||'';
-        byId('s_summary').value = s.summary||'';
-        byId('s_homework').value = s.homework||'';
-        byId('s_next_goal').value = s.next_goal||'';
-        byId('s_count_index').value = s.count_index||1;
-        byId('saveSessionBtn').dataset.editId = editId;
-      }else{
-        byId('sessionFormTitle').textContent = '新規面談';
-        ['s_client_name','s_at','s_mode','s_tool_or_room','s_summary','s_homework','s_next_goal','s_count_index'].forEach(id=>byId(id).value='');
-        byId('s_mode').value='オンライン'; byId('s_count_index').value=1;
-        delete byId('saveSessionBtn').dataset.editId;
-      }
-    }
-    function editSession(id){ showSessionForm(id); }
-    function deleteSession(id){
-      if(!confirm('この面談記録を削除しますか？')) return;
-      sessions = sessions.filter(s=>s.id!==id);
-      store.set(KEY.sessions, sessions);
-      refreshSessions();
-      refreshDashboard();
-    }
-
-    function refreshBookings(){
-      const q = byId('bookingSearch').value.trim().toLowerCase();
-      const sf = byId('bookingStatusFilter').value;
-      const tbody = byId('bookingsTable').querySelector('tbody');
-      const filtered = bookings.filter(b => {
-        const str = [b.name,b.email,b.status,b.memo].join(' ').toLowerCase();
-        const okQ = q ? str.includes(q) : true;
-        const okS = sf ? (b.status||'') === sf : true;
-        return okQ && okS;
-      }).sort((a,b)=> (b.confirmed_at||'') < (a.confirmed_at||'') ? -1 : 1);
-      tbody.innerHTML = filtered.map(b => `
-        <tr>
-          <td>${b.name||''}</td><td>${b.email||''}</td><td>${fmtDate(b.desired_at_1)}</td><td>${fmtDate(b.desired_at_2)}</td>
-          <td>${fmtDate(b.confirmed_at)}</td><td>${b.status||''}</td><td>${b.memo||''}</td>
-          <td>
-            <button class="btn btn-outline" onclick="editBooking('${b.id}')">編集</button>
-            <button class="btn btn-danger" onclick="deleteBooking('${b.id}')">削除</button>
-          </td>
-        </tr>
-      `).join('') || '<tr><td colspan="8" class="note">予約が未登録です</td></tr>';
-    }
-    function showBookingForm(editId=null){
-      byId('bookingFormCard').style.display = 'block';
-      if(editId){
-        const b = bookings.find(x=>x.id===editId);
-        byId('bookingFormTitle').textContent = '予約を編集';
-        byId('b_name').value = b.name||''; byId('b_email').value=b.email||'';
-        byId('b_desired1').value = b.desired_at_1 ? b.desired_at_1.slice(0,16) : '';
-        byId('b_desired2').value = b.desired_at_2 ? b.desired_at_2.slice(0,16) : '';
-        byId('b_confirmed').value = b.confirmed_at ? b.confirmed_at.slice(0,16) : '';
-        byId('b_status').value = b.status||'リクエスト';
-        byId('b_memo').value = b.memo||'';
-        byId('saveBookingBtn').dataset.editId = editId;
-      }else{
-        byId('bookingFormTitle').textContent = '新規予約';
-        ['b_name','b_email','b_desired1','b_desired2','b_confirmed','b_status','b_memo'].forEach(id=>byId(id).value='');
-        byId('b_status').value='リクエスト';
-        delete byId('saveBookingBtn').dataset.editId;
-      }
-    }
-    function editBooking(id){ showBookingForm(id); }
-    function deleteBooking(id){
-      if(!confirm('この予約を削除しますか？')) return;
-      bookings = bookings.filter(b=>b.id!==id);
-      store.set(KEY.bookings, bookings);
-      refreshBookings();
-      refreshDashboard();
-    }
-
-    function refreshInvoices(){
-      const q = byId('invoiceSearch').value.trim().toLowerCase();
-      const pf = byId('invoicePaidFilter').value;
-      const tbody = byId('invoicesTable').querySelector('tbody');
-      const filtered = invoices.filter(i => {
-        const str = [i.name,i.invoice_no,i.receipt_no].join(' ').toLowerCase();
-        const okQ = q ? str.includes(q) : true;
-        const okP = pf ? (i.paid||'未入金') === pf : true;
-        return okQ && okP;
-      }).sort((a,b)=> (b.issued_at||'') < (a.issued_at||'') ? -1 : 1);
-      tbody.innerHTML = filtered.map(i => `
-        <tr>
-          <td>${i.issued_at||''}</td><td>${i.name||''}</td><td>${i.amount||0}</td><td>${i.method||''}</td>
-          <td>${i.paid||'未入金'}</td><td>${i.invoice_no||''}</td><td>${i.receipt_no||''}</td>
-          <td>
-            <button class="btn btn-outline" onclick="editInvoice('${i.id}')">編集</button>
-            <button class="btn btn-danger" onclick="deleteInvoice('${i.id}')">削除</button>
-          </td>
-        </tr>
-      `).join('') || '<tr><td colspan="8" class="note">請求が未登録です</td></tr>';
-    }
-    function showInvoiceForm(editId=null){
-      byId('invoiceFormCard').style.display = 'block';
-      if(editId){
-        const i = invoices.find(x=>x.id===editId);
-        byId('invoiceFormTitle').textContent = '請求を編集';
-        byId('i_name').value = i.name||'';
-        byId('i_amount').value = i.amount||settings.price||8000;
-        byId('i_method').value = i.method||'銀行振込';
-        byId('i_paid').value = i.paid||'未入金';
-        byId('i_invoice_no').value = i.invoice_no||'';
-        byId('i_receipt_no').value = i.receipt_no||'';
-        byId('i_issued_at').value = i.issued_at||todayISO();
-        byId('saveInvoiceBtn').dataset.editId = editId;
-      }else{
-        byId('invoiceFormTitle').textContent = '新規請求';
-        byId('i_name').value = '';
-        byId('i_amount').value = settings.price||8000;
-        byId('i_method').value = '銀行振込';
-        byId('i_paid').value = '未入金';
-        byId('i_invoice_no').value = '';
-        byId('i_receipt_no').value = '';
-        byId('i_issued_at').value = todayISO();
-        delete byId('saveInvoiceBtn').dataset.editId;
-      }
-    }
-    function editInvoice(id){ showInvoiceForm(id); }
-    function deleteInvoice(id){
-      if(!confirm('この請求を削除しますか？')) return;
-      invoices = invoices.filter(i=>i.id!==id);
-      store.set(KEY.invoices, invoices);
-      refreshInvoices();
-      refreshDashboard();
-    }
-
-    byId('saveClientBtn').addEventListener('click', () => {
-      const editId = byId('saveClientBtn').dataset.editId;
-      const c = {
-        id: editId || uid('C'),
-        name: byId('f_name').value.trim(),
-        email: byId('f_email').value.trim(),
-        phone: byId('f_phone').value.trim(),
-        city: byId('f_city').value.trim(),
-        main_issue: byId('f_main_issue').value.trim(),
-        tags: byId('f_tags').value.trim(),
-        risk: byId('f_risk').value,
-        notes: byId('f_notes').value.trim(),
-        last_session_at: editId ? (clients.find(x=>x.id===editId)?.last_session_at || '') : '',
-        count: editId ? (clients.find(x=>x.id===editId)?.count || 0) : 0
-      };
-      if(editId){ clients = clients.map(x => x.id===editId ? c : x); } else { clients.push(c); }
-      store.set(KEY.clients, clients);
-      byId('clientFormCard').style.display = 'none';
-      refreshClients();
-    });
-    byId('cancelClientBtn').addEventListener('click', () => byId('clientFormCard').style.display='none');
-    byId('addClientBtn').addEventListener('click', () => showClientForm());
-
-    byId('saveSessionBtn').addEventListener('click', () => {
-      const editId = byId('saveSessionBtn').dataset.editId;
-      const s = {
-        id: editId || uid('S'),
-        client_name: byId('s_client_name').value.trim(),
-        at: byId('s_at').value ? new Date(byId('s_at').value).toISOString() : '',
-        mode: byId('s_mode').value,
-        tool_or_room: byId('s_tool_or_room').value.trim(),
-        summary: byId('s_summary').value.trim(),
-        homework: byId('s_homework').value.trim(),
-        next_goal: byId('s_next_goal').value.trim(),
-        count_index: parseInt(byId('s_count_index').value||'1',10)
-      };
-      if(editId){ sessions = sessions.map(x => x.id===editId ? s : x); } else { sessions.push(s); }
-      const c = clients.find(x=>x.name===s.client_name);
-      if(c){
-        c.last_session_at = s.at;
-        c.count = Math.max( (c.count||0), s.count_index||1 );
-        clients = clients.map(x => x.id===c.id ? c : x);
-        store.set(KEY.clients, clients);
-      }
-      store.set(KEY.sessions, sessions);
-      byId('sessionFormCard').style.display = 'none';
-      refreshSessions(); refreshClients(); refreshDashboard();
-    });
-    byId('cancelSessionBtn').addEventListener('click', () => byId('sessionFormCard').style.display='none');
-    byId('addSessionBtn').addEventListener('click', () => showSessionForm());
-
-    byId('saveBookingBtn').addEventListener('click', () => {
-      const editId = byId('saveBookingBtn').dataset.editId;
-      const b = {
-        id: editId || uid('B'),
-        name: byId('b_name').value.trim(),
-        email: byId('b_email').value.trim(),
-        desired_at_1: byId('b_desired1').value ? new Date(byId('b_desired1').value).toISOString() : '',
-        desired_at_2: byId('b_desired2').value ? new Date(byId('b_desired2').value).toISOString() : '',
-        confirmed_at: byId('b_confirmed').value ? new Date(byId('b_confirmed').value).toISOString() : '',
-        status: byId('b_status').value,
-        memo: byId('b_memo').value.trim()
-      };
-      if(editId){ bookings = bookings.map(x => x.id===editId ? b : x); } else { bookings.push(b); }
-      store.set(KEY.bookings, bookings);
-      byId('bookingFormCard').style.display = 'none';
-      refreshBookings(); refreshDashboard();
-    });
-    byId('cancelBookingBtn').addEventListener('click', () => byId('bookingFormCard').style.display='none');
-    byId('addBookingBtn').addEventListener('click', () => showBookingForm());
-
-    byId('saveInvoiceBtn').addEventListener('click', () => {
-      const editId = byId('saveInvoiceBtn').dataset.editId;
-      const i = {
-        id: editId || uid('I'),
-        name: byId('i_name').value.trim(),
-        amount: parseInt(byId('i_amount').value||'0',10),
-        method: byId('i_method').value,
-        paid: byId('i_paid').value,
-        invoice_no: byId('i_invoice_no').value.trim(),
-        receipt_no: byId('i_receipt_no').value.trim(),
-        issued_at: byId('i_issued_at').value
-      };
-      if(editId){ invoices = invoices.map(x => x.id===editId ? i : x); } else { invoices.push(i); }
-      store.set(KEY.invoices, invoices);
-      byId('invoiceFormCard').style.display = 'none';
-      refreshInvoices(); refreshDashboard();
-    });
-    byId('cancelInvoiceBtn').addEventListener('click', () => byId('invoiceFormCard').style.display='none');
-    byId('addInvoiceBtn').addEventListener('click', () => showInvoiceForm());
-
-    byId('clientSearch').addEventListener('input', refreshClients);
-    byId('clientRiskFilter').addEventListener('change', refreshClients);
-    byId('sessionSearch').addEventListener('input', refreshSessions);
-    byId('sessionModeFilter').addEventListener('change', refreshSessions);
-    byId('bookingSearch').addEventListener('input', refreshBookings);
-    byId('bookingStatusFilter').addEventListener('change', refreshBookings);
-    byId('invoiceSearch').addEventListener('input', refreshInvoices);
-    byId('invoicePaidFilter').addEventListener('change', refreshInvoices);
-
-    function refreshSettingsUI(){
-      byId('set_price').value = settings.price||8000;
-      byId('set_duration').value = settings.duration||60;
-      byId('set_consent_version').value = settings.consent_version||'';
-      byId('set_reminder_tpl').value = settings.reminder_tpl||'';
-    }
-    byId('saveSettingsBtn').addEventListener('click', () => {
-      settings.price = parseInt(byId('set_price').value||'8000',10);
-      settings.duration = parseInt(byId('set_duration').value||'60',10);
-      settings.consent_version = byId('set_consent_version').value.trim();
-      settings.reminder_tpl = byId('set_reminder_tpl').value.trim();
-      store.set(KEY.settings, settings);
-      alert('設定を保存しました');
-    });
-
-    document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)); });
-
-    function download(filename, text){
-      const blob = new Blob([text], {type:'text/csv;charset=utf-8;'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
-      setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
-    }
-    byId('exportClientsBtn').addEventListener('click', () => download('clients.csv', toCSV(clients)));
-    byId('exportSessionsBtn').addEventListener('click', () => download('sessions.csv', toCSV(sessions)));
-    byId('exportBookingsBtn').addEventListener('click', () => download('bookings.csv', toCSV(bookings)));
-    byId('exportInvoicesBtn').addEventListener('click', () => download('invoices.csv', toCSV(invoices)));
-    byId('exportAllBtn').addEventListener('click', () => {
-      byId('exportClientsBtn').click();
-      setTimeout(()=>byId('exportSessionsBtn').click(), 300);
-      setTimeout(()=>byId('exportBookingsBtn').click(), 600);
-      setTimeout(()=>byId('exportInvoicesBtn').click(), 900);
-    });
-
-    function handleCSVImport(file, target){
-      const reader = new FileReader();
-      reader.onload = () => {
-        const rows = parseCSV(reader.result);
-        if(target==='clients'){
-          clients = rows.map(r => ({
-            id: r.id || uid('C'), name: r.name||'', email: r.email||'', phone: r.phone||'',
-            city: r.city||'', main_issue: r.main_issue||'', tags: r.tags||'', risk: (r.risk||'none'),
-            last_session_at: r.last_session_at||'', count: parseInt(r.count||'0',10)
-          }));
-          store.set(KEY.clients, clients); refreshClients();
-        }else if(target==='sessions'){
-          sessions = rows.map(r => ({
-            id: r.id || uid('S'), client_name: r.client_name||'', at: r.at||'', mode: r.mode||'',
-            tool_or_room: r.tool_or_room||'', summary: r.summary||'', homework: r.homework||'',
-            next_goal: r.next_goal||'', count_index: parseInt(r.count_index||'1',10)
-          }));
-          store.set(KEY.sessions, sessions); refreshSessions(); refreshDashboard();
-        }else if(target==='bookings'){
-          bookings = rows.map(r => ({
-            id: r.id || uid('B'), name: r.name||'', email: r.email||'', desired_at_1: r.desired_at_1||'',
-            desired_at_2: r.desired_at_2||'', confirmed_at: r.confirmed_at||'', status: r.status||'', memo: r.memo||''
-          }));
-          store.set(KEY.bookings, bookings); refreshBookings(); refreshDashboard();
-        }else if(target==='invoices'){
-          invoices = rows.map(r => ({
-            id: r.id || uid('I'), name: r.name||'', amount: parseInt(r.amount||'0',10), method: r.method||'',
-            paid: r.paid||'未入金', invoice_no: r.invoice_no||'', receipt_no: r.receipt_no||'', issued_at: r.issued_at||''
-          }));
-          store.set(KEY.invoices, invoices); refreshInvoices(); refreshDashboard();
-        }
-        alert(`${file.name} を ${target} に読み込みました`);
-      };
-      reader.readAsText(file, 'UTF-8');
-    }
-    byId('importClientsInput').addEventListener('change', (e) => { const f = e.target.files[0]; if(f) handleCSVImport(f, 'clients'); e.target.value=''; });
-    byId('importSessionsInput').addEventListener('change', (e) => { const f = e.target.files[0]; if(f) handleCSVImport(f, 'sessions'); e.target.value=''; });
-    byId('importBookingsInput').addEventListener('change', (e) => { const f = e.target.files[0]; if(f) handleCSVImport(f, 'bookings'); e.target.value=''; });
-    byId('importInvoicesInput').addEventListener('change', (e) => { const f = e.target.files[0]; if(f) handleCSVImport(f, 'invoices'); e.target.value=''; });
-
-    byId('importInput').addEventListener('change', (e) => {
-      for(const f of e.target.files){
-        const name = f.name.toLowerCase();
-        if(name.startsWith('clients')) handleCSVImport(f, 'clients');
-        else if(name.startsWith('sessions')) handleCSVImport(f, 'sessions');
-        else if(name.startsWith('bookings')) handleCSVImport(f, 'bookings');
-        else if(name.startsWith('invoices')) handleCSVImport(f, 'invoices');
-        else alert(`${f.name} の対象が特定できません（clients/sessions/bookings/invoices で始まるファイル名にしてください）`);
-      }
-      e.target.value='';
-    });
-
-    byId('clearLocalBtn').addEventListener('click', () => {
-      if(!confirm('ローカル保存（このPC内のデータ）を削除します。よろしいですか？')) return;
-      ['clients','sessions','bookings','invoices','settings'].forEach(k => store.del(KEY[k]));
-      clients=[]; sessions=[]; bookings=[]; invoices=[]; settings={ price:8000,duration:60,consent_version:'',reminder_tpl:'' };
-      refreshClients(); refreshSessions(); refreshBookings(); refreshInvoices(); refreshDashboard(); refreshSettingsUI();
-      alert('ローカル保存を削除しました');
-    });
-
-    byId('searchAll').addEventListener('input', () => {
-      const q = byId('searchAll').value.trim().toLowerCase();
-      const items = [];
-      clients.forEach(c => { const str = [c.name,c.email,c.phone,c.city,c.main_issue,c.tags,c.notes].join(' ').toLowerCase(); if(q && str.includes(q)) items.push(`クライアント: ${c.name} / ${c.email}`); });
-      sessions.forEach(s => { const str = [s.client_name,s.summary,s.homework,s.next_goal,s.tool_or_room].join(' ').toLowerCase(); if(q && str.includes(q)) items.push(`面談: ${s.client_name} @ ${fmtDate(s.at)}`); });
-      bookings.forEach(b => { const str = [b.name,b.email,b.status,b.memo].join(' ').toLowerCase(); if(q && str.includes(q)) items.push(`予約: ${b.name} / ${b.status}`); });
-      invoices.forEach(i => { const str = [i.name,i.invoice_no,i.receipt_no,i.paid].join(' ').toLowerCase(); if(q && str.includes(q)) items.push(`請求: ${i.name} / ${i.paid}`); });
-      byId('searchResults').textContent = items.length ? items.join(' / ') : '検索結果はここに表示されます';
-    });
-
-    refreshDashboard(); refreshClients(); refreshSessions(); refreshBookings(); refreshInvoices(); refreshSettingsUI();
-    setActiveTab('dashboard');
-
-    // API同期（必要なら設定値に置き換え）
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzOdxHqkscn3zk4bDTAzm3YB5oEQ-mV74qafJzHhgYVrXcQ810kePZ2g0PozFgXewL4/exec';
+<!-- 予約フォーム内容 → Google Sheetsへコピー送信（URLエンコード統一） -->
+<script>
+  // 最新のGASウェブアプリURL（/exec に更新してください）
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzOdxHqkscn3zk4bDTAzm3YB5oEQ-mV74qafJzHhgYVrXcQ810kePZ2g0PozFgXewL4/exec';
   const TOKEN   = 'rD9aZx7NwQ2pLm8T_vG4yH1kE6oB3cJ0fS5uR9tY2nM8dF4lP1iX6eA3qV0wG5zU9-~C7';
-    async function syncFromAPI(){
-      try{
-        const url = API_URL + '?token=' + encodeURIComponent(TOKEN);
-        const res = await fetch(url, { method:'GET' });
-        const json = await res.json();
-        if(!json.ok){ alert('APIトークンが不正、または権限不足です'); return; }
-        applyBookings(json.data || []);
-      }catch(_){
-        // 必要ならJSONPフォールバックを追加可能
-        alert('API同期に失敗しました。URL/トークン/権限をご確認ください。');
-      }
-    }
-    function applyBookings(rows){
-      const incoming = rows.map(r => ({
-        id: r.timestamp ? String(new Date(r.timestamp).getTime()) : uid('B'),
-        name: r.name || '',
-        email: r.email || '',
-        desired_at_1: r.datetime1 ? new Date(r.datetime1).toISOString() : '',
-        desired_at_2: r.datetime2 ? new Date(r.datetime2).toISOString() : '',
-        confirmed_at: '',
-        status: 'リクエスト',
-        memo: [r.method||'', r.online_tool||'', r.office||''].filter(Boolean).join(' / ')
-      }));
-      const existIds = new Set(bookings.map(b => b.id));
-      const newOnes = incoming.filter(b => !existIds.has(b.id));
-      bookings = bookings.concat(newOnes);
-      store.set(KEY.bookings, bookings);
 
-      let addedClients = 0;
-      newOnes.forEach(b => {
-        const e = (b.email||'').trim().toLowerCase();
-        const n = (b.name||'').trim();
-        const exists = clients.find(c => (c.email||'').trim().toLowerCase() === e) || clients.find(c => c.name === n);
-        if(!exists){
-          clients.push({ id: uid('C'), name: b.name, email: b.email, phone:'', city:'', main_issue:'', tags:'新規予約', risk:'none', notes:'', last_session_at:'', count:0 });
-          addedClients++;
+  (function hookBookingForm(){
+    const form = document.querySelector('#booking form');
+    if(!form) return;
+
+    form.addEventListener('submit', function(){
+      const data = {
+        token: TOKEN,
+        name:  document.getElementById('name')?.value || '',
+        email: document.getElementById('email')?.value || '',
+        method: (document.getElementById('m-inperson')?.checked ? '対面（越谷）' : 'オンライン'),
+        online_tool: document.getElementById('tool')?.value || '',
+        office: document.getElementById('office')?.value || '',
+        datetime1: document.getElementById('date1')?.value || '',
+        datetime2: document.getElementById('date2')?.value || '',
+        summary: document.getElementById('topic')?.value || '',
+        notes: document.getElementById('notes')?.value || '',
+        agree: document.getElementById('agree')?.checked ? 'true' : 'false',
+        userAgent: navigator.userAgent
+      };
+
+      const params = new URLSearchParams();
+      Object.entries(data).forEach(([k, v]) => params.append(k, v));
+      const bodyStr = params.toString();
+
+      // sendBeacon（URLエンコード）
+      try {
+        if (navigator.sendBeacon) {
+          const blob = new Blob([bodyStr], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+          navigator.sendBeacon(API_URL, blob);
         }
-      });
-      if(addedClients) store.set(KEY.clients, clients);
+      } catch(_) {}
 
-      refreshBookings(); refreshClients(); refreshDashboard();
-      alert(`APIから予約 ${newOnes.length}件、クライアント ${addedClients}件を同期しました`);
-    }
-    document.getElementById('syncApiBtn')?.addEventListener('click', syncFromAPI);
-  </script>
+      // 保険のfetch（no-cors + keepalive）
+      try {
+        fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: bodyStr,
+          keepalive: true
+        }).catch(()=>{});
+      } catch(_) {}
+      // formsubmit.coへの送信は通常通り継続
+    }, false);
+  })();
+</script>
+
+<!-- 管理者ログイン判定（サイト側） -->
+<script>
+  const ADMIN_URL = 'admin.html';
+  const ADMIN_PASSWORD = 'hisakohisako';
+
+  (function adminLoginUI(){
+    const $toggle = document.getElementById('adminLoginToggle');
+    const $card   = document.getElementById('adminLoginCard');
+    const $pass   = document.getElementById('adminPass');
+    const $btn    = document.getElementById('adminLoginBtn');
+    const $show   = document.getElementById('adminShowBtn');
+    const $msg    = document.getElementById('adminLoginMsg');
+
+    if(!$toggle || !$card) return;
+
+    $toggle.addEventListener('click', () => {
+      $card.style.display = ($card.style.display === 'none' || !$card.style.display) ? 'block' : 'none';
+      $msg.textContent = '';
+      if($card.style.display === 'block'){ setTimeout(()=> $pass?.focus(), 0); }
+    });
+
+    $show.addEventListener('click', () => {
+      if($pass.type === 'password'){ $pass.type='text'; $show.textContent='非表示'; }
+      else{ $pass.type='password'; $show.textContent='表示'; }
+    });
+
+    $btn.addEventListener('click', () => {
+      const pwd = ($pass.value || '').trim();
+      if(!pwd){ $msg.textContent='パスワードを入力してください。'; return; }
+      if(pwd === ADMIN_PASSWORD){
+        sessionStorage.setItem('admin_unlocked', 'v1');
+        $msg.textContent='認証に成功しました。移動します…';
+        location.href = ADMIN_URL;
+      }else{
+        $msg.textContent='パスワードが違います。';
+      }
+    });
+
+    $pass.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){ e.preventDefault(); $btn.click(); }
+    });
+  })();
+</script>
 </body>
 </html>
